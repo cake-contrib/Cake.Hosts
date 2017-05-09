@@ -1,4 +1,7 @@
-﻿namespace Cake.Hosts
+﻿using System;
+
+
+namespace Cake.Hosts
 {
     internal interface IHostsPathProvider
     {
@@ -7,5 +10,28 @@
         /// </summary>
         /// <returns></returns>
         string GetHostsFilePath();
+    }
+
+
+    internal class WindowsHostsPathProvider : IHostsPathProvider
+    {
+        public string GetHostsFilePath()
+        {
+            var windir = Environment.GetEnvironmentVariable("windir");
+            Guard.ArgumentIsNotNull(windir, nameof(windir));
+
+            var hosts = windir + @"\System32\drivers\etc\hosts";
+
+            return hosts;
+        }
+    }
+
+
+    internal class LinuxHostsPathProvider : IHostsPathProvider
+    {
+        public string GetHostsFilePath()
+        {
+            return @"/etc/hosts";
+        }
     }
 }

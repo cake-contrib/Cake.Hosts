@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text;
 using Cake.Core;
 using Cake.Core.Diagnostics;
@@ -18,6 +20,7 @@ namespace Cake.Hosts
             this.log = log;
         }
 
+        // throws if this domain name already in the file
         public void AddHostsRecord(String ipAddress, String domainName)
         {
             var fullPath = hostsPathProvider.GetHostsFilePath();
@@ -37,9 +40,18 @@ namespace Cake.Hosts
         }
 
 
-        public void HostsRecordExists(String domainName)
+        public bool HostsRecordExists(String domainName)
         {
-            throw new NotImplementedException();
+            Guard.ArgumentIsNotNull(domainName, nameof(domainName));
+            var hostsPath = hostsPathProvider.GetHostsFilePath();
+            Guard.FileExists(hostsPath);
+
+            var allLines = File.ReadAllLines(hostsPath);
+
+            domainName = domainName.ToLower();
+            var recordExists = allLines.Any(l => l.ToLower().Contains(domainName));
+
+            return recordExists;
         }
     }
 }
