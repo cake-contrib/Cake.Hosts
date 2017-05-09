@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,15 +45,32 @@ namespace Cake.Hosts
         public bool HostsRecordExists(String domainName)
         {
             Guard.ArgumentIsNotNull(domainName, nameof(domainName));
-            var hostsPath = hostsPathProvider.GetHostsFilePath();
-            Guard.FileExists(hostsPath);
 
-            var allLines = File.ReadAllLines(hostsPath);
+            var allLines = ReadHostsFile();
 
             domainName = domainName.ToLower();
             var recordExists = allLines.Any(l => l.ToLower().Contains(domainName));
 
             return recordExists;
+        }
+
+        private IEnumerable<String> ReadHostsFile()
+        {
+            var hostsPath = hostsPathProvider.GetHostsFilePath();
+            Guard.FileExists(hostsPath);
+
+            var allLines = File.ReadAllLines(hostsPath);
+
+            // need to exclude comments, so ignoring everything after #
+            foreach (var line in allLines)
+            {
+                var lineParts = line.Split('#');
+                var firstPart = lineParts[0].Trim();
+                if (!String.IsNullOrWhiteSpace(firstPart))
+                {
+                    yield return firstPart;
+                }
+            }
         }
     }
 }

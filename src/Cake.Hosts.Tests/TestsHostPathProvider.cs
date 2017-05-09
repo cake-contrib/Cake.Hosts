@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
 namespace Cake.Hosts.Tests
 {
@@ -9,7 +6,7 @@ namespace Cake.Hosts.Tests
     {
         public string GetHostsFilePath()
         {
-            return Directory.GetCurrentDirectory() + "testHosts";
+            return Directory.GetCurrentDirectory() + @"\testHosts";
         }
     }
 }
