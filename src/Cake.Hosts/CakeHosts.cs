@@ -18,6 +18,12 @@ namespace Cake.Hosts
             this.log = log;
         }
 
+        public void AddHostsRecord(String ipAddress, String domainName)
+        {
+            var fullPath = hostsPathProvider.GetHostsFilePath();
+            throw new NotImplementedException();
+        }
+
         public void AddOrReplaceHostsRecord(String ipAddress, String domainName)
         {
             var fullPath = hostsPathProvider.GetHostsFilePath();
