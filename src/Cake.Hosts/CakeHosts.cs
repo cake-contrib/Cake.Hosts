@@ -46,13 +46,14 @@ namespace Cake.Hosts
         {
             Guard.ArgumentIsNotNull(domainName, nameof(domainName));
 
-            var allLines = ReadHostsFile();
+            var allLines = ReadHostsFile().ToList();
 
             domainName = domainName.ToLower();
             var recordExists = allLines.Any(l => l.ToLower().Contains(domainName));
 
             return recordExists;
         }
+
 
         private IEnumerable<String> ReadHostsFile()
         {
@@ -61,7 +62,7 @@ namespace Cake.Hosts
 
             var allLines = File.ReadAllLines(hostsPath);
 
-            // need to exclude comments, so ignoring everything after #
+            // need to exclude comments, so ignoring everything after '#'
             foreach (var line in allLines)
             {
                 var lineParts = line.Split('#');

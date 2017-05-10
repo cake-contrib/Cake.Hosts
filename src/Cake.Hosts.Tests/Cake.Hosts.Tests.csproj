@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Cake.Hosts\Cake.Hosts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="testHosts">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
