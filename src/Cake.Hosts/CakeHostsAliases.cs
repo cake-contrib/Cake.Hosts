@@ -13,21 +13,21 @@ namespace Cake.Hosts
         }
 
 
-        public static void AddOrReplaceHostsRecord(this ICakeContext context, String ipAddress, String domainName)
-        {
-            throw new NotImplementedException();
-        }
+        //public static void AddOrReplaceHostsRecord(this ICakeContext context, String ipAddress, String domainName)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         
-        public static void RemoveHostsRecord(this ICakeContext context, String domainName)
-        {
-            throw new NotImplementedException();
-        }
+        //public static void RemoveHostsRecord(this ICakeContext context, String domainName)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
 
-        public static void HostsRecordExists(this ICakeContext context, String domainName)
-        {
-            throw new NotImplementedException();
-        }
+        //public static void HostsRecordExists(this ICakeContext context, String domainName)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
