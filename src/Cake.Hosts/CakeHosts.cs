@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Cake.Core;
 using Cake.Core.Diagnostics;
+
 
 namespace Cake.Hosts
 {
@@ -24,25 +23,43 @@ namespace Cake.Hosts
         }
 
 
-        public bool HostsRecordExists(string ip, String domainName)
+        public bool HostsRecordExists(string ipAddress, String domainName)
         {
-            Guard.ArgumentIsNotNull(ip, nameof(ip));
+            Guard.CheckIpAddress(ipAddress, nameof(ipAddress));
             Guard.ArgumentIsNotNull(domainName, nameof(domainName));
 
-            var regexPattern = $@"^\s*{Regex.Escape(ip)}\s*{Regex.Escape(domainName)}\s*$";
+            var regexPattern = $@"^\s*{Regex.Escape(ipAddress)}\s*{Regex.Escape(domainName)}\s*$";
             var regexp = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
             var path = hostsPathProvider.GetHostsFilePath();
+            log.Debug("Using Hosts file at location {0}", path);
+            log.Debug("Using regex to check Paths file: {0}", regexp);
             var fileContents = File.ReadAllText(path);
 
-            return regexp.IsMatch(fileContents);
+            var result = regexp.IsMatch(fileContents);
+            
+            log.Information("Checking if hosts file contains record with ip {0} and domain {1}. Result: {2}", ipAddress, domainName, result);
+
+            return result;
         }
+
 
         // Does not throw if this domain name already in the file
         public void AddHostsRecord(String ipAddress, String domainName)
         {
-            var fullPath = hostsPathProvider.GetHostsFilePath();
-            throw new NotImplementedException();
+            Guard.CheckIpAddress(ipAddress, nameof(ipAddress));
+            Guard.ArgumentIsNotNull(domainName, nameof(domainName));
+
+            var path = hostsPathProvider.GetHostsFilePath();
+            log.Debug("Using Hosts file at location {0}", path);
+
+            if (HostsRecordExists(ipAddress, domainName))
+            {
+                log.Debug("Hosts file already contains record with IP {0} and domain {1}. Ignoring this operation", ipAddress, domainName);
+                return;
+            }
+
+            File.AppendAllText(path, Environment.NewLine + ipAddress + " " + domainName);
         }
 
 
@@ -72,18 +89,6 @@ namespace Cake.Hosts
         //    File.WriteAllLines(hostsPath, allLines);
         //}
 
-
-        //public bool HostsRecordExists(String domainName)
-        //{
-        //    Guard.ArgumentIsNotNull(domainName, nameof(domainName));
-
-        //    var allLines = ReadLinexExcludeComments().ToList();
-
-        //    domainName = domainName.ToLower();
-        //    var recordExists = allLines.Any(l => l.ToLower().Contains(domainName));
-
-        //    return recordExists;
-        //}
 
 
         private IEnumerable<String> ReadLinexExcludeComments()

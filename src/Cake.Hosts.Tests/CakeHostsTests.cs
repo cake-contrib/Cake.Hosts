@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Cake.Core;
 using Cake.Core.Diagnostics;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
+
 
 namespace Cake.Hosts.Tests
 {
@@ -54,6 +54,49 @@ namespace Cake.Hosts.Tests
 
             // Assert
             result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void AddRecord_Always_Adds()
+        {
+            // Act
+            sut.AddHostsRecord("127.0.0.1", "MyTest.dev");
+
+            // Assert
+            var hostsLines = ReadHostsLines();
+            var hasRecord = hostsLines.Any(l => l == "127.0.0.1 MyTest.dev");
+            hasRecord.Should().BeTrue();
+        }
+
+
+        [Fact]
+        public void AddRecord_CommentedAlready_AddsAnyway()
+        {
+            // Act
+            sut.AddHostsRecord("127.0.0.1", "DisabledHost.dev");
+
+            // Assert
+            var hostsLines = ReadHostsLines();
+
+            var hasRecord = hostsLines.Any(l => l == "127.0.0.1 DisabledHost.dev");
+            var numberOfMentions = hostsLines.Count(l => l.Contains("DisabledHost.dev"));
+
+            hasRecord.Should().BeTrue();
+            numberOfMentions.Should().Be(2);
+        }
+
+
+        [Fact]
+        public void AddRecord_AlreadyExist_DoesNotAdd()
+        {
+            // Act
+            sut.AddHostsRecord("127.0.0.1", "ImSpecial");
+            sut.AddHostsRecord("127.0.0.1", "ImSpecial");
+
+            // Assert
+            var hostsLines = ReadHostsLines();
+            var numberOfMentions = hostsLines.Count(l => l.Contains("ImSpecial"));
+            numberOfMentions.Should().Be(1);
         }
 
         //[Fact]
