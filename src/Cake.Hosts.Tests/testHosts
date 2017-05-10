@@ -1,5 +1,7 @@
 ﻿127.0.0.1 NotFound
 127.0.0.1 MyProject
 127.0.0.1 AnotherProject.dev
+127.0.0.1 ToBeRemoved.dev
+#127.0.0.1 ToBeRemoved.disabled
 #This is comment about MyProject
 # 127.0.0.1 DisabledHost.dev
