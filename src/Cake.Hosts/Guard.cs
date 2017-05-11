@@ -35,6 +35,8 @@ namespace Cake.Hosts
             }
         }
 
+
+        //http://stackoverflow.com/a/11412991/809357
         [DebuggerHidden]
         internal static void CheckIpAddress(String ipString, string arguementName)
         {
