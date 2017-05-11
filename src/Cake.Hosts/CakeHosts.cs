@@ -15,7 +15,7 @@ namespace Cake.Hosts
         private readonly ICakeContext cakeContext;
         private readonly ICakeLog log;
 
-        public CakeHosts(IHostsPathProvider hostsPathProvider, ICakeContext cakeContext, ICakeLog log)
+        public CakeHosts(ICakeContext cakeContext, IHostsPathProvider hostsPathProvider, ICakeLog log)
         {
             this.hostsPathProvider = hostsPathProvider;
             this.cakeContext = cakeContext;
@@ -23,17 +23,15 @@ namespace Cake.Hosts
         }
 
 
-        public bool HostsRecordExists(string ipAddress, String domainName)
+        internal bool HostsRecordExists(string ipAddress, String domainName)
         {
             Guard.CheckIpAddress(ipAddress, nameof(ipAddress));
             Guard.ArgumentIsNotNull(domainName, nameof(domainName));
 
-            var regexPattern = $@"^\s*{Regex.Escape(ipAddress)}\s*{Regex.Escape(domainName)}\s*$";
-            var regexp = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            var regexp = GetRegex(ipAddress, domainName);
 
             var path = hostsPathProvider.GetHostsFilePath();
             log.Debug("Using Hosts file at location {0}", path);
-            log.Debug("Using regex to check Paths file: {0}", regexp);
             var fileContents = File.ReadAllText(path);
 
             var result = regexp.IsMatch(fileContents);
@@ -45,12 +43,13 @@ namespace Cake.Hosts
 
 
         // Does not throw if this domain name already in the file
-        public void AddHostsRecord(String ipAddress, String domainName)
+        internal void AddHostsRecord(String ipAddress, String domainName)
         {
             Guard.CheckIpAddress(ipAddress, nameof(ipAddress));
             Guard.ArgumentIsNotNull(domainName, nameof(domainName));
 
             var path = hostsPathProvider.GetHostsFilePath();
+            Guard.FileExists(path);
             log.Debug("Using Hosts file at location {0}", path);
 
             if (HostsRecordExists(ipAddress, domainName))
@@ -64,32 +63,44 @@ namespace Cake.Hosts
 
 
 
-        //public void RemoveHostsRecord(String domainName)
-        //{
-        //    Guard.ArgumentIsNotNull(domainName, nameof(domainName));
+        internal void RemoveHostsRecord(String ipAddress, String domainName)
+        {
+            Guard.CheckIpAddress(ipAddress, nameof(ipAddress));
+            Guard.ArgumentIsNotNull(domainName, nameof(domainName));
 
-        //    var hostsPath = hostsPathProvider.GetHostsFilePath();
-        //    Guard.FileExists(hostsPath);
+            var path = hostsPathProvider.GetHostsFilePath();
+            Guard.FileExists(path);
+            log.Debug("Using Hosts file at location {0}", path);
 
-        //    var allLines = File.ReadAllLines(hostsPath).ToList();
+            if (!HostsRecordExists(ipAddress, domainName))
+            {
+                return;
+            }
 
-        //    //foreach (var line in allLines)
-        //    for (int i = allLines.Count-1; i >= 0; i--)
-        //    {
-        //        var line = allLines[i];
-        //        // check if no comment
-        //        var split = line.Split('#');
-        //        var contents = split[0];
-        //        if (contents.Trim().Equals(domainName, StringComparison.OrdinalIgnoreCase))
-        //        {
-        //            allLines.RemoveAt(i);
-        //        }
-        //    }
+            var regex = GetRegex(ipAddress, domainName);
 
-        //    File.WriteAllLines(hostsPath, allLines);
-        //}
+            var allLines = File.ReadAllLines(path).ToList();
+
+            for (int i = allLines.Count - 1; i >= 0; i--)
+            {
+                var line = allLines[i];
+                if (regex.IsMatch(line))
+                {
+                    allLines.RemoveAt(i);
+                }
+            }
+
+            File.WriteAllLines(path, allLines);
+        }
 
 
+        private Regex GetRegex(string ipAddress, string domainName)
+        {
+            var regexPattern = $@"^\s*{Regex.Escape(ipAddress)}\s*{Regex.Escape(domainName)}\s*$";
+            var regexp = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            log.Debug("Using regex to check Paths file: {0}", regexp);
+            return regexp;
+        }
 
         private IEnumerable<String> ReadLinexExcludeComments()
         {

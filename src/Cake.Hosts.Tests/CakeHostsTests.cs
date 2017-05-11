@@ -20,7 +20,7 @@ namespace Cake.Hosts.Tests
         {
             var context = Substitute.For<ICakeContext>();
             var log = Substitute.For<ICakeLog>();
-            sut = new CakeHosts(new TestsHostPathProvider(), context, log);
+            sut = new CakeHosts(context, new TestsHostPathProvider(), log);
             hostsPath = new TestsHostPathProvider().GetHostsFilePath();
             File.Copy(hostsPath, hostsPath + ".backup", overwrite: true);
         }
@@ -99,34 +99,48 @@ namespace Cake.Hosts.Tests
             numberOfMentions.Should().Be(1);
         }
 
-        //[Fact]
-        //public void RemoveHostsRecord_Removes_Always()
-        //{
-        //    // Act
-        //    var domainName = "ToBeRemoved.dev";
-        //    sut.RemoveHostsRecord(domainName);
+        [Fact]
+        public void RemoveHostsRecord_Removes_Always()
+        {
+            // Act
+            sut.RemoveHostsRecord("127.0.0.1", "ToBeRemoved.dev");
 
-        //    // Assert
-        //    // validate hosts file does not contain the record anymore
-        //    var hostsLines = ReadHostsLines();
-        //    var hasRecord = hostsLines.Any(l => l.ToLower().Contains(domainName.ToLower()));
-        //    hasRecord.Should().BeFalse();
-        //}
+            // Assert
+            // validate hosts file does not contain the record anymore
+            var hostsLines = ReadHostsLines();
+            var hasRecord = hostsLines.Any(l => l.ToLower().Contains("ToBeRemoved.dev".ToLower()));
+            hasRecord.Should().BeFalse();
+        }
 
 
-        //[Fact]
-        //public void RemoveHostsRecord_Commented_DoesNotChange()
-        //{
-        //    // Act
-        //    var domainName = "ToBeRemoved.disabled";
-        //    sut.RemoveHostsRecord(domainName);
+        [Fact]
+        public void RemoveHostsRecord_Commented_DoesNotChange()
+        {
+            // Act
+            sut.RemoveHostsRecord("127.0.0.1", "ToBeRemoved.disabled");
 
-        //    // Assert
-        //    // validate hosts file does not contain the record anymore
-        //    var hostsLines = ReadHostsLines();
-        //    var hasRecord = hostsLines.Any(l => l.ToLower().Contains(domainName.ToLower()));
-        //    hasRecord.Should().BeTrue();
-        //}
+            // Assert
+            // validate hosts file does not contain the record anymore
+            var hostsLines = ReadHostsLines();
+            var hasRecord = hostsLines.Any(l => l.ToLower().Contains("ToBeRemoved.disabled".ToLower()));
+            hasRecord.Should().BeTrue();
+        }
+
+
+        [Fact]
+        public void RemoveHosts_WithoutMathingHost_DoesNotChangeFile()
+        {
+            // Arrange 
+            var fileContentsBefore = File.ReadAllText(hostsPath);
+
+            // Act
+            sut.RemoveHostsRecord("8.8.8.8", "blah");
+
+            // Assert
+            var contentsAfter = File.ReadAllText(hostsPath);
+            contentsAfter.Should().Be(fileContentsBefore);
+        }
+
 
 
         public void Dispose()
@@ -134,7 +148,7 @@ namespace Cake.Hosts.Tests
             File.Copy(hostsPath + ".backup", hostsPath, overwrite: true);
         }
 
-        public List<String> ReadHostsLines()
+        private List<String> ReadHostsLines()
         {
             var allLines = File.ReadAllLines(hostsPath).ToList();
             return allLines;
