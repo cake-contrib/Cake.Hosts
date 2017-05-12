@@ -21,7 +21,7 @@ public class BuildVersion
         if (context.IsRunningOnWindows())
         {
             context.Information("Calculating Semantic Version...");
-            // if (!BuildParameters.IsLocalBuild)
+            if (!BuildParameters.IsLocalBuild)
             {
                 context.GitVersion(new GitVersionSettings{
                     UpdateAssemblyInfoFilePath = BuildParameters.Paths.Files.SolutionInfoFilePath,

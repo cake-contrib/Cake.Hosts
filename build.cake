@@ -151,6 +151,8 @@ Task("Package")
         {
             Configuration = BuildParameters.Configuration,
             OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
+            NoBuild = true, // should already be built
+            ArgumentCustomization = args=>args.Append("/p:Version="+BuildParameters.Version.Version),
         };
 
         DotNetCorePack("./src/Cake.Hosts/Cake.Hosts.csproj", settings);
