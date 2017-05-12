@@ -137,6 +137,9 @@ Task("Tests")
         DotNetCoreTest("./src/Cake.Hosts.Tests/Cake.Hosts.Tests.csproj", settings);
     });
 
+Task("Pack")
+    .IsDependentOn("Package");
+
 
 Task("Package")
     .IsDependentOn("Tests")

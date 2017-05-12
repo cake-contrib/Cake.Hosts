@@ -15,6 +15,14 @@
     <TreatSpecificWarningsAsErrors />
   </PropertyGroup>
 
+  <!--http://stackoverflow.com/a/42183749/809357-->
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs" Link="SolutionInfo.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Cake.Core" Version="0.19.5" />
   </ItemGroup>

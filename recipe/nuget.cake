@@ -1,56 +1,4 @@
-var createNuGetPackagesTask = Task("Create-NuGet-Packages")
-    .IsDependentOn("Build")
-    .WithCriteria(() => DirectoryExists(BuildParameters.Paths.Directories.NugetNuspecDirectory))
-    .Does(() =>
-{
-    var nuspecFiles = GetFiles(BuildParameters.Paths.Directories.NugetNuspecDirectory + "/**/*.nuspec");
-
-    EnsureDirectoryExists(BuildParameters.Paths.Directories.NuGetPackages);
-
-    foreach(var nuspecFile in nuspecFiles)
-    {
-        // TODO: Addin the release notes
-        // ReleaseNotes = BuildParameters.ReleaseNotes.Notes.ToArray(),
-
-        if(DirectoryExists(BuildParameters.Paths.Directories.PublishedLibraries.Combine(nuspecFile.GetFilenameWithoutExtension().ToString())))
-        {
-            // Create packages.
-            NuGetPack(nuspecFile, new NuGetPackSettings {
-                Version = BuildParameters.Version.SemVersion,
-                BasePath = BuildParameters.Paths.Directories.PublishedLibraries.Combine(nuspecFile.GetFilenameWithoutExtension().ToString()),
-                OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
-                Symbols = false,
-                NoPackageAnalysis = true
-            });
-
-            continue;
-        }
-
-        if(DirectoryExists(BuildParameters.Paths.Directories.PublishedApplications.Combine(nuspecFile.GetFilenameWithoutExtension().ToString())))
-        {
-            // Create packages.
-            NuGetPack(nuspecFile, new NuGetPackSettings {
-                Version = BuildParameters.Version.SemVersion,
-                BasePath = BuildParameters.Paths.Directories.PublishedApplications.Combine(nuspecFile.GetFilenameWithoutExtension().ToString()),
-                OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
-                Symbols = false,
-                NoPackageAnalysis = true
-            });
-
-            continue;
-        }
-
-            // Create packages.
-            NuGetPack(nuspecFile, new NuGetPackSettings {
-                Version = BuildParameters.Version.SemVersion,
-                OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
-                Symbols = false,
-                NoPackageAnalysis = true
-            });
-    }
-});
-
-var publishMyGetPackagesTask = Task("Publish-MyGet-Packages")
+Task("Publish-MyGet-Packages")
     .IsDependentOn("Package")
     .WithCriteria(() => BuildParameters.ShouldPublishMyGet)
     .WithCriteria(() => DirectoryExists(BuildParameters.Paths.Directories.NuGetPackages) || DirectoryExists(BuildParameters.Paths.Directories.ChocolateyPackages))
@@ -93,7 +41,7 @@ var publishMyGetPackagesTask = Task("Publish-MyGet-Packages")
     publishingError = true;
 });
 
-var publishNuGetPackagesTask = Task("Publish-Nuget-Packages")
+Task("Publish-Nuget-Packages")
     .IsDependentOn("Package")
     .WithCriteria(() => BuildParameters.ShouldPublishNuGet)
     .WithCriteria(() => DirectoryExists(BuildParameters.Paths.Directories.NuGetPackages))
