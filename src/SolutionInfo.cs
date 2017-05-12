@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("Cake.Hosts")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("AMV Software")]
 [assembly: System.Reflection.AssemblyProductAttribute("Cake.Hosts")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Cake.Hosts")]
 

@@ -18,6 +18,9 @@
   <!--http://stackoverflow.com/a/42183749/809357-->
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Authors>Max Vasilyev</Authors>
+    <PackageProjectUrl>https://github.com/AMVSoftware/Cake.Hosts</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AMVSoftware/Cake.Hosts</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs" Link="SolutionInfo.cs" />
