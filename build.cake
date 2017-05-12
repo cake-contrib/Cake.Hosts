@@ -8,7 +8,7 @@
 
 Environment.SetVariableNames(
     myGetApiKeyVariable: "CAKE_HOSTS_MYGET_API_KEY",
-    myGetSourceUrlVariable: "CAKE_HOSTS_MYGET_SOURCE",
+    myGetSourceUrlVariable: "CAKE_HOSTS_MYGET_SOURCE"
 );
 
 
