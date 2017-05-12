@@ -8,7 +8,6 @@ public static class Environment
     public static string NuGetSourceUrlVariable { get; private set; }
 
     public static string AppVeyorApiTokenVariable { get; private set; }
-    public static string CoverallsRepoTokenVariable { get; private set; }
 
     public static void SetVariableNames(
         string githubUserNameVariable = null,
@@ -17,8 +16,7 @@ public static class Environment
         string myGetSourceUrlVariable = null, 
         string nuGetApiKeyVariable = null,
         string nuGetSourceUrlVariable = null, 
-        string appVeyorApiTokenVariable = null,
-        string coverallsRepoTokenVariable = null)
+        string appVeyorApiTokenVariable = null)
     {
         GithubUserNameVariable = githubUserNameVariable ?? "GITHUB_USERNAME";
         GithubPasswordVariable = githubPasswordVariable ?? "GITHUB_PASSWORD";
@@ -28,6 +26,5 @@ public static class Environment
         NuGetSourceUrlVariable = nuGetSourceUrlVariable ?? "NUGET_SOURCE";
 
         AppVeyorApiTokenVariable = appVeyorApiTokenVariable ?? "APPVEYOR_API_TOKEN";
-        CoverallsRepoTokenVariable = coverallsRepoTokenVariable ?? "COVERALLS_REPO_TOKEN";
     }
 }

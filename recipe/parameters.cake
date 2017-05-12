@@ -12,11 +12,11 @@ public static class BuildParameters
     public static bool IsTagged { get; private set; }
     public static bool IsPublishBuild { get; private set; }
     public static bool IsReleaseBuild { get; private set; }
+
     public static GitHubCredentials GitHub { get; private set; }
     public static MyGetCredentials MyGet { get; private set; }
     public static NuGetCredentials NuGet { get; private set; }
     public static AppVeyorCredentials AppVeyor { get; private set; }
-    public static CoverallsCredentials Coveralls { get; private set; }
 
     public static BuildVersion Version { get; private set; }
     public static BuildPaths Paths { get; private set; }
@@ -29,8 +29,6 @@ public static class BuildParameters
     public static string Title { get; private set; }
 
 
-    public static bool ShouldDownloadMilestoneReleaseNotes { get; private set;}
-    public static bool ShouldDownloadFullReleaseNotes { get; private set;}
 
     public static FilePath MilestoneReleaseNotesFilePath { get; private set; }
     public static FilePath FullReleaseNotesFilePath { get; private set; }
@@ -76,8 +74,6 @@ public static class BuildParameters
         context.Information("IsMasterBranch: {0}", IsMasterBranch);
 
 
-        context.Information("ShouldDownloadFullReleaseNotes: {0}", ShouldDownloadFullReleaseNotes);
-        context.Information("ShouldDownloadMilestoneReleaseNotes: {0}", ShouldDownloadMilestoneReleaseNotes);
         
         context.Information("ShouldGenerateDocumentation: {0}", ShouldGenerateDocumentation);
         context.Information("ShouldExecuteGitLink: {0}", ShouldExecuteGitLink);
@@ -98,8 +94,6 @@ public static class BuildParameters
         bool shouldPostToSlack = true,
         bool shouldPostToTwitter = true,
         bool shouldPostToMicrosoftTeams = false,
-        bool shouldDownloadMilestoneReleaseNotes = false,
-        bool shouldDownloadFullReleaseNotes = false,
         FilePath milestoneReleaseNotesFilePath = null,
         FilePath fullReleaseNotesFilePath = null,
         bool shouldPublishMyGet = true,
@@ -119,9 +113,6 @@ public static class BuildParameters
         SolutionFilePath = solutionFilePath ?? SourceDirectoryPath.CombineWithFilePath(Title + ".sln");
         SolutionDirectoryPath = solutionDirectoryPath ?? SourceDirectoryPath.Combine(Title);
         RootDirectoryPath = rootDirectoryPath ?? context.MakeAbsolute(context.Environment.WorkingDirectory);
-
-        ShouldDownloadFullReleaseNotes = shouldDownloadFullReleaseNotes;
-        ShouldDownloadMilestoneReleaseNotes = shouldDownloadMilestoneReleaseNotes;
 
 
         MilestoneReleaseNotesFilePath = milestoneReleaseNotesFilePath ?? RootDirectoryPath.CombineWithFilePath("CHANGELOG.md");
@@ -147,7 +138,6 @@ public static class BuildParameters
         NuGet = GetNuGetCredentials(context);
 
         AppVeyor = GetAppVeyorCredentials(context);
-        Coveralls = GetCoverallsCredentials(context);
 
         IsPublishBuild = new [] {
             "Create-Release-Notes"
