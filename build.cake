@@ -62,9 +62,25 @@ Setup(context =>
 });
 
 
-Task("debug")
-    .Does(() => {
-        Information("debug");
+
+
+Task("Debug")
+    .Does(() => 
+    {
+        Information("Target: {0}", BuildParameters.Target);
+        Information("Configuration: {0}", BuildParameters.Configuration);
+
+        Information("Source DirectoryPath: {0}", MakeAbsolute(BuildParameters.SourceDirectoryPath));
+        Information("Build DirectoryPath: {0}", MakeAbsolute(BuildParameters.Paths.Directories.Build));
     });
+
+Task("Clean")
+    .Does(() =>
+{
+    Information("Cleaning...");
+
+    CleanDirectories(BuildParameters.Paths.Directories.ToClean);
+});
+
 
 RunTarget(BuildParameters.Target);
