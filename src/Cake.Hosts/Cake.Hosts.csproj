@@ -21,6 +21,7 @@
     <Authors>Max Vasilyev</Authors>
     <PackageProjectUrl>https://github.com/AMVSoftware/Cake.Hosts</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AMVSoftware/Cake.Hosts</RepositoryUrl>
+    <Description>Cake Build addon to manipulate Hosts file</Description>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs" Link="SolutionInfo.cs" />
