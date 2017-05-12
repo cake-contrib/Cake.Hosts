@@ -1,6 +1,8 @@
 //TODO Checkout https://github.com/cake-contrib/Cake.Recipe/blob/develop/build.cake
 //#addin nuget:?package=Cake.Git&version=0.13.0
 
+// #addin "nuget?package=Cake.Incubator"
+
 #load "./build/credentials.cake"
 #load "./build/parameters.cake"
 #load "./build/gitversion.cake"
@@ -83,8 +85,8 @@ Task("Clean")
         Information("Cleaning...");
 
         CleanDirectories(BuildParameters.Paths.Directories.ToClean);
-        // CleanDirectories("./src/**/bin/**");
-        // CleanDirectories("./src/**/obj/**");
+        CleanDirectories("./src/**/bin/**");
+        CleanDirectories("./src/**/obj/**");
     });
 
 
@@ -113,23 +115,6 @@ Task("Build")
     {
         Information("Building {0}", BuildParameters.SolutionFilePath);
 
-        // var msbuildSettings = new MSBuildSettings().
-        //         SetPlatformTarget(ToolSettings.BuildPlatformTarget)
-        //         .WithProperty("TreatWarningsAsErrors","true")
-        //         .WithTarget("Build")
-        //         .SetMaxCpuCount(ToolSettings.MaxCpuCount)
-        //         .SetConfiguration(BuildParameters.Configuration)
-        //         .WithLogger(
-        //             Context.Tools.Resolve("MSBuild.ExtensionPack.Loggers.dll").FullPath,
-        //             "XmlFileLogger",
-        //             string.Format(
-        //                 "logfile=\"{0}\";invalidCharReplacement=_;verbosity=Detailed;encoding=UTF-8",
-        //                 BuildParameters.Paths.Files.BuildLogFilePath)
-        //         );
-
-
-        // MSBuild(BuildParameters.SolutionFilePath, msbuildSettings);
-
         var settings = new DotNetCoreBuildSettings
         {
             Configuration = BuildParameters.Configuration,
@@ -138,6 +123,19 @@ Task("Build")
         DotNetCoreBuild(sourceDirectoryPath, settings);
     });
 
+Task("Tests")
+    .IsDependentOn("Restore")
+    .Does(() => 
+    {
+        Information("Testing {0}", BuildParameters.SolutionFilePath);
+
+        var settings = new DotNetCoreTestSettings
+        {
+            Configuration = "Release"
+        };
+
+        DotNetCoreTest("./src/Cake.Hosts.Tests/Cake.Hosts.Tests.csproj", settings);
+    });
 
 
 Task("Package")
