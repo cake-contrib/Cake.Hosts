@@ -7,6 +7,8 @@
 #load "./build/environment.cake"
 #load "./build/addins.cake"
 #load "./build/paths.cake"
+#load "./build/toolsettings.cake"
+
 
 
 Environment.SetVariableNames();
@@ -37,7 +39,6 @@ ToolSettings.SetToolSettings(Context);
 var publishingError = false;
 
 
-
 Setup(context =>
 {
     if(BuildParameters.IsMasterBranch && (context.Log.Verbosity != Verbosity.Diagnostic)) {
@@ -48,9 +49,9 @@ Setup(context =>
     BuildParameters.SetBuildPaths(BuildPaths.GetPaths(Context));
 
 
-    var semanticVersion = BuildVersion.CalculatingSemanticVersion(Context)
+    var semanticVersion = BuildVersion.CalculatingSemanticVersion(Context);
     BuildParameters.SetBuildVersion(semanticVersion);
-    );
+    
     
     Information("Building version {0} of " + title + " ({1}, {2}) using version {3} of Cake. (IsTagged: {4})",
         BuildParameters.Version.SemVersion,
@@ -59,3 +60,11 @@ Setup(context =>
         BuildParameters.Version.CakeVersion,
         BuildParameters.IsTagged);
 });
+
+
+Task("debug")
+    .Does(() => {
+        Information("debug");
+    });
+
+RunTarget(BuildParameters.Target);
