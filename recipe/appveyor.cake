@@ -30,13 +30,13 @@ Task("Print-AppVeyor-Environment-Variables")
         Information("CONFIGURATION: {0}", EnvironmentVariable("CONFIGURATION"));
     });
 
-var uploadAppVeyorArtifactsTask = Task("Upload-AppVeyor-Artifacts")
+Task("Upload-AppVeyor-Artifacts")
     .IsDependentOn("Package")
     .WithCriteria(() => BuildParameters.IsRunningOnAppVeyor)
-    .WithCriteria(() => DirectoryExists(BuildParameters.Paths.Directories.NuGetPackages))
+    .WithCriteria(() => DirectoryExists(BuildParameters.BuildArtifacts))
     .Does(() =>
     {
-        foreach(var package in GetFiles(BuildParameters.Paths.Directories.NuGetPackages + "/*"))
+        foreach(var package in GetFiles(BuildParameters.BuildArtifacts + "/*"))
         {
             AppVeyor.UploadArtifact(package);
         }

@@ -24,7 +24,7 @@ public class BuildVersion
             if (!BuildParameters.IsLocalBuild)
             {
                 context.GitVersion(new GitVersionSettings{
-                    UpdateAssemblyInfoFilePath = BuildParameters.Paths.Files.SolutionInfoFilePath,
+                    UpdateAssemblyInfoFilePath = BuildParameters.SolutionInfoFilePath,
                     UpdateAssemblyInfo = true,
                     OutputType = GitVersionOutput.BuildServer
                 });
@@ -49,7 +49,7 @@ public class BuildVersion
         if (string.IsNullOrEmpty(version) || string.IsNullOrEmpty(semVersion))
         {
             context.Information("Fetching version from SolutionInfo...");
-            var assemblyInfo = context.ParseAssemblyInfo(BuildParameters.Paths.Files.SolutionInfoFilePath);
+            var assemblyInfo = context.ParseAssemblyInfo(BuildParameters.SolutionInfoFilePath);
             version = assemblyInfo.AssemblyVersion;
             semVersion = assemblyInfo.AssemblyInformationalVersion;
             milestone = string.Concat(version);

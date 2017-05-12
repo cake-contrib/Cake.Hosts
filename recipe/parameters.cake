@@ -8,56 +8,30 @@ public static class BuildParameters
     public static bool IsRunningOnAppVeyor { get; private set; }
     public static bool IsPullRequest { get; private set; }
     public static bool IsMasterBranch { get; private set; }
-
     public static bool IsTagged { get; private set; }
-    public static bool IsPublishBuild { get; private set; }
-    public static bool IsReleaseBuild { get; private set; }
 
-    public static GitHubCredentials GitHub { get; private set; }
     public static MyGetCredentials MyGet { get; private set; }
-    public static NuGetCredentials NuGet { get; private set; }
-    public static AppVeyorCredentials AppVeyor { get; private set; }
-
     public static BuildVersion Version { get; private set; }
-    public static BuildPaths Paths { get; private set; }
     
+    public static string Title { get; private set; }
     public static DirectoryPath RootDirectoryPath { get; private set; }
     public static FilePath SolutionFilePath { get; private set; }
+    public static FilePath SolutionInfoFilePath { get; private set; }
+
+    public static FilePath ProjectFilePath { get; private set; }
+    public static FilePath TestsProjFilePath { get; private set; }
+
     public static DirectoryPath SourceDirectoryPath { get; private set; }
     public static DirectoryPath SolutionDirectoryPath { get; private set; }
+    public static DirectoryPath ProjectDirectoryPath { get; private set; }
+    public static DirectoryPath BuildArtifacts { get; private set; }
 
-    public static string Title { get; private set; }
-
-
-
-    public static FilePath MilestoneReleaseNotesFilePath { get; private set; }
-    public static FilePath FullReleaseNotesFilePath { get; private set; }
 
     public static bool ShouldPublishMyGet { get; private set; }
-    public static bool ShouldPublishNuGet { get; private set; }
-    public static bool ShouldPublishGitHub { get; private set; }
-    public static bool ShouldGenerateDocumentation { get; private set; }
-    public static bool ShouldExecuteGitLink { get; private set; }
-
-
-    public static bool CanUseGitReleaseManager
-    {
-        get
-        {
-            return !string.IsNullOrEmpty(BuildParameters.GitHub.UserName) &&
-                !string.IsNullOrEmpty(BuildParameters.GitHub.Password);
-        }
-    }
-
 
     public static void SetBuildVersion(BuildVersion version)
     {
         Version  = version;
-    }
-
-    public static void SetBuildPaths(BuildPaths paths)
-    {
-        Paths  = paths;
     }
 
     public static void PrintParameters(ICakeContext context)
@@ -68,18 +42,21 @@ public static class BuildParameters
         }
 
         context.Information("Printing Build Parameters...");
+
+        context.Information("Target: {0}", Target);
+        context.Information("Configuration: {0}", Configuration);
         context.Information("IsLocalBuild: {0}", IsLocalBuild);
         context.Information("IsPullRequest: {0}", IsPullRequest);
         context.Information("IsTagged: {0}", IsTagged);
         context.Information("IsMasterBranch: {0}", IsMasterBranch);
-
-
-        
-        context.Information("ShouldGenerateDocumentation: {0}", ShouldGenerateDocumentation);
-        context.Information("ShouldExecuteGitLink: {0}", ShouldExecuteGitLink);
         context.Information("IsRunningOnUnix: {0}", IsRunningOnUnix);
         context.Information("IsRunningOnWindows: {0}", IsRunningOnWindows);
         context.Information("IsRunningOnAppVeyor: {0}", IsRunningOnAppVeyor);
+        context.Information("Version.Version: {0}", Version.Version);
+        context.Information("Version.SemVersion: {0}", Version.SemVersion);
+        context.Information("Version.Milestone: {0}", Version.Milestone);
+        context.Information("Version.CakeVersion: {0}", Version.CakeVersion);
+
     }
 
     public static void SetParameters(
@@ -88,38 +65,34 @@ public static class BuildParameters
         DirectoryPath sourceDirectoryPath,
         string title,
         FilePath solutionFilePath = null,
+        FilePath solutionInfoFilePath = null,
+        FilePath projectFilePath = null,
+        FilePath testsProjFilePath = null,
         DirectoryPath solutionDirectoryPath = null,
         DirectoryPath rootDirectoryPath = null,
-        bool shouldPostToGitter = true,
-        bool shouldPostToSlack = true,
-        bool shouldPostToTwitter = true,
-        bool shouldPostToMicrosoftTeams = false,
-        FilePath milestoneReleaseNotesFilePath = null,
-        FilePath fullReleaseNotesFilePath = null,
-        bool shouldPublishMyGet = true,
-        bool shouldPublishChocolatey = true,
-        bool shouldPublishNuGet = true,
-        bool shouldPublishGitHub = true,
-        bool shouldGenerateDocumentation = true,
-        bool shouldExecuteGitLink = true)
+        DirectoryPath projectDirectoryPath = null,
+        bool shouldPublishMyGet = true)
     {
         if (context == null)
         {
             throw new ArgumentNullException("context");
         }
+        Target = context.Argument("target", "Default");
+        Configuration = context.Argument("configuration", "Release");
+        BuildArtifacts = "./BuildArtifacts";
         
         SourceDirectoryPath = sourceDirectoryPath;
         Title = title;
         SolutionFilePath = solutionFilePath ?? SourceDirectoryPath.CombineWithFilePath(Title + ".sln");
+        SolutionInfoFilePath = solutionInfoFilePath ?? SourceDirectoryPath.CombineWithFilePath("SolutionInfo.cs");
+        ProjectFilePath = projectFilePath ?? SourceDirectoryPath.CombineWithFilePath(Title + "/" + Title + ".csproj");
+        TestsProjFilePath = testsProjFilePath ?? SourceDirectoryPath.CombineWithFilePath(Title + ".Tests/" + Title + ".Tests.csproj");
+
         SolutionDirectoryPath = solutionDirectoryPath ?? SourceDirectoryPath.Combine(Title);
         RootDirectoryPath = rootDirectoryPath ?? context.MakeAbsolute(context.Environment.WorkingDirectory);
+        ProjectDirectoryPath = projectDirectoryPath ?? SourceDirectoryPath.Combine(Title);
 
 
-        MilestoneReleaseNotesFilePath = milestoneReleaseNotesFilePath ?? RootDirectoryPath.CombineWithFilePath("CHANGELOG.md");
-        FullReleaseNotesFilePath = fullReleaseNotesFilePath ?? RootDirectoryPath.CombineWithFilePath("ReleaseNotes.md");
-
-        Target = context.Argument("target", "Default");
-        Configuration = context.Argument("configuration", "Release");
         IsLocalBuild = buildSystem.IsLocalBuild;
         IsRunningOnUnix = context.IsRunningOnUnix();
         IsRunningOnWindows = context.IsRunningOnWindows();
@@ -132,53 +105,8 @@ public static class BuildParameters
             buildSystem.AppVeyor.Environment.Repository.Tag.IsTag &&
             !string.IsNullOrWhiteSpace(buildSystem.AppVeyor.Environment.Repository.Tag.Name)
         );
-        GitHub = GetGitHubCredentials(context);
 
         MyGet = GetMyGetCredentials(context);
-        NuGet = GetNuGetCredentials(context);
-
-        AppVeyor = GetAppVeyorCredentials(context);
-
-        IsPublishBuild = new [] {
-            "Create-Release-Notes"
-        }.Any(
-            releaseTarget => StringComparer.OrdinalIgnoreCase.Equals(releaseTarget, Target)
-        );
-        IsReleaseBuild = new [] {
-            "Publish-NuGet-Packages",
-            "Publish-Chocolatey-Packages",
-            "Publish-GitHub-Release"
-        }.Any(
-            publishTarget => StringComparer.OrdinalIgnoreCase.Equals(publishTarget, Target)
-        );
-
-        SetBuildPaths(BuildPaths.GetPaths(context));
-
-        ShouldPublishMyGet = (!IsLocalBuild &&
-                                !IsPullRequest &&
-                                (IsTagged || !IsMasterBranch) &&
-                                shouldPublishMyGet);
-
-        ShouldPublishNuGet = (!IsLocalBuild &&
-                                !IsPullRequest &&
-                                IsMasterBranch &&
-                                IsTagged &&
-                                shouldPublishNuGet);
-        
-        ShouldPublishGitHub = (!IsLocalBuild &&
-                                !IsPullRequest &&
-                                IsMasterBranch &&
-                                IsTagged &&
-                                shouldPublishGitHub);
-
-        ShouldGenerateDocumentation = (!IsLocalBuild &&
-                                !IsPullRequest &&
-                                IsMasterBranch &&
-                                shouldGenerateDocumentation);
-
-        ShouldExecuteGitLink = (!IsLocalBuild && 
-                            !IsPullRequest &&
-                            IsMasterBranch &&
-                            shouldExecuteGitLink);
+        ShouldPublishMyGet = (!IsPullRequest && shouldPublishMyGet);
     }
 }
