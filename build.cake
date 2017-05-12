@@ -6,7 +6,10 @@
 
 
 
-Environment.SetVariableNames();
+Environment.SetVariableNames(
+    myGetApiKeyVariable: "CAKE_HOSTS_MYGET_API_KEY",
+    myGetSourceUrlVariable: "CAKE_HOSTS_MYGET_SOURCE",
+);
 
 
 var rootDirectoryPath         = MakeAbsolute(Context.Environment.WorkingDirectory);
