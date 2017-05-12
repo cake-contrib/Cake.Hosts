@@ -3,15 +3,15 @@
 
 // #addin "nuget?package=Cake.Incubator"
 
-#load "./build/credentials.cake"
-#load "./build/parameters.cake"
-#load "./build/gitversion.cake"
-#load "./build/environment.cake"
-#load "./build/addins.cake"
-#load "./build/paths.cake"
-#load "./build/toolsettings.cake"
-#load "./build/nuget.cake"
-#load "./build/appveyor.cake"
+#load "./recipe/credentials.cake"
+#load "./recipe/parameters.cake"
+#load "./recipe/gitversion.cake"
+#load "./recipe/environment.cake"
+#load "./recipe/addins.cake"
+#load "./recipe/paths.cake"
+#load "./recipe/toolsettings.cake"
+#load "./recipe/nuget.cake"
+#load "./recipe/appveyor.cake"
 
 
 
