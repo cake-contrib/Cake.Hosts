@@ -97,7 +97,6 @@ Task("Restore")
         var settings = new DotNetCoreRestoreSettings
         {
             Sources = new[] { "https://www.nuget.org/api/v2" },
-            PackagesDirectory = "./packages",
             DisableParallel = false,
             WorkingDirectory = sourceDirectoryPath,
         };
