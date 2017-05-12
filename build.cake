@@ -124,14 +124,14 @@ Task("Build")
     });
 
 Task("Tests")
-    .IsDependentOn("Restore")
+    .IsDependentOn("Build")
     .Does(() => 
     {
         Information("Testing {0}", BuildParameters.SolutionFilePath);
 
         var settings = new DotNetCoreTestSettings
         {
-            Configuration = "Release"
+            Configuration = BuildParameters.Configuration,
         };
 
         DotNetCoreTest("./src/Cake.Hosts.Tests/Cake.Hosts.Tests.csproj", settings);
@@ -139,12 +139,19 @@ Task("Tests")
 
 
 Task("Package")
-    // .IsDependentOn("Export-Release-Notes")
-    // .IsDependentOn("Create-NuGet-Packages")
-    // .IsDependentOn("Create-Chocolatey-Packages")
-    // .IsDependentOn("Test")
-    // .IsDependentOn("Analyze")
-    ;
+    .IsDependentOn("Tests")
+    .Does(() => 
+    {
+        Information("Packing {0}", BuildParameters.SolutionFilePath);
+
+        var settings = new DotNetCorePackSettings
+        {
+            Configuration = BuildParameters.Configuration,
+            OutputDirectory = BuildParameters.Paths.Directories.NuGetPackages,
+        };
+
+        DotNetCorePack("./src/Cake.Hosts/Cake.Hosts.csproj", settings);
+    });
 
 Task("Default")
     .IsDependentOn("Package");
