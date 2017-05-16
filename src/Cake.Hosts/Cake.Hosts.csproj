@@ -1,28 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>net45;net46;netcoreapp1.1;netstandard1.6</TargetFramework>
+    <AssemblyName>Cake.Hosts</AssemblyName>
+    <RootNamespace>Cake.Hosts</RootNamespace>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>    
+
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Cake.Hosts</PackageId>
+    <Authors>Max Vasilyev</Authors>
+    <Company>AMV Software</Company>
+    <PackageProjectUrl>https://github.com/AMVSoftware/Cake.Hosts</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AMVSoftware/Cake.Hosts</RepositoryUrl>
+    <Description>Cake Build addon to manipulate Hosts file</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/AMVSoftware/Cake.Hosts/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/cake-build/graphics/master/png/cake-medium.png</PackageIconUrl>
+    <PackageTags>cake hosts cake-build cake-contrib</PackageTags>
+    <IncludeSymbols>true</IncludeSymbols>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>False</Optimize>
-    <DocumentationFile>bin\Debug\netcoreapp1.1\Cake.Hosts.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Cake.Hosts.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp1.1\Cake.Hosts.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Cake.Hosts.xml</DocumentationFile>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
   </PropertyGroup>
 
-  <!--http://stackoverflow.com/a/42183749/809357-->
-  <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Authors>Max Vasilyev</Authors>
-    <PackageProjectUrl>https://github.com/AMVSoftware/Cake.Hosts</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/AMVSoftware/Cake.Hosts</RepositoryUrl>
-    <Description>Cake Build addon to manipulate Hosts file</Description>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs" Link="SolutionInfo.cs" />
   </ItemGroup>
