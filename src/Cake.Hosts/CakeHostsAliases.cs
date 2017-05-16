@@ -16,6 +16,7 @@ namespace Cake.Hosts
     ///     #addin "nuget:?package=Cake.Hosts"
     /// </code>
     /// </summary>
+    [CakeNamespaceImport("Cake.Hosts")]
     [CakeAliasCategory("Hosts")]
     public static class CakeHostsAliases
     {
@@ -26,6 +27,7 @@ namespace Cake.Hosts
         /// <param name="ipAddress">IP address to check</param>
         /// <param name="domainName">Domain name to check</param>
         /// <returns>If given parameters already constitue a record in hosts file</returns>
+        [CakeMethodAlias]
         public static bool HostsRecordExists(this ICakeContext context, String ipAddress, String domainName)
         {
             var cakeHosts = GetCakeHosts(context);
@@ -38,6 +40,7 @@ namespace Cake.Hosts
         /// <param name="context">The Cake context.</param>
         /// <param name="ipAddress">IP address to add</param>
         /// <param name="domainName">Domain name to add</param>
+        [CakeMethodAlias]
         public static void AddHostsRecord(this ICakeContext context, String ipAddress, String domainName)
         {
             var cakeHosts = GetCakeHosts(context);
@@ -51,6 +54,7 @@ namespace Cake.Hosts
         /// <param name="context">The cake context.</param>
         /// <param name="ipAddress">IP address to check</param>
         /// <param name="domainName">Domain name to check</param>
+        [CakeMethodAlias]
         public static void RemoveHostsRecord(this ICakeContext context, String ipAddress, String domainName)
         {
             var cakeHosts = GetCakeHosts(context);

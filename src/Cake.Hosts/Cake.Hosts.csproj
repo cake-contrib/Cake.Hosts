@@ -43,7 +43,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cake.Core" Version="0.19.5" />
+    <PackageReference Include="Cake.Core" Version="0.19.5">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
