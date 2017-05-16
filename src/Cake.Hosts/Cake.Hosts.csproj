@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net45;net46;netcoreapp1.1;netstandard1.6</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>Cake.Hosts</AssemblyName>
     <RootNamespace>Cake.Hosts</RootNamespace>
 
