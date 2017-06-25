@@ -1,6 +1,7 @@
 ﻿using System;
 using Cake.Core;
 using Cake.Core.Annotations;
+using Cake.Core.Diagnostics;
 
 namespace Cake.Hosts
 {
@@ -31,7 +32,9 @@ namespace Cake.Hosts
         public static bool HostsRecordExists(this ICakeContext context, String ipAddress, String domainName)
         {
             var cakeHosts = GetCakeHosts(context);
-            return cakeHosts.HostsRecordExists(ipAddress, domainName);
+            var result = cakeHosts.HostsRecordExists(ipAddress, domainName);
+            context.Log.Write(Verbosity.Normal, LogLevel.Information, "HOSTS record {0} with IP {1} exists: {2}", ipAddress, domainName, result);
+            return result;
         }
 
         /// <summary>
@@ -43,6 +46,7 @@ namespace Cake.Hosts
         [CakeMethodAlias]
         public static void AddHostsRecord(this ICakeContext context, String ipAddress, String domainName)
         {
+            context.Log.Write(Verbosity.Normal, LogLevel.Information, "Adding HOSTS record {0} with IP {1}", ipAddress, domainName);
             var cakeHosts = GetCakeHosts(context);
             cakeHosts.AddHostsRecord(ipAddress, domainName);
         }
@@ -57,6 +61,7 @@ namespace Cake.Hosts
         [CakeMethodAlias]
         public static void RemoveHostsRecord(this ICakeContext context, String ipAddress, String domainName)
         {
+            context.Log.Write(Verbosity.Normal, LogLevel.Information, "Removing HOSTS record {0} with IP {1}", ipAddress, domainName);
             var cakeHosts = GetCakeHosts(context);
             cakeHosts.RemoveHostsRecord(ipAddress, domainName);
         }
