@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net46;netcoreapp1.1</TargetFrameworks>
+    <TargetFrameworks>net46;netcoreapp1.1</TargetFrameworks>
     <AssemblyName>Cake.Hosts</AssemblyName>
     <RootNamespace>Cake.Hosts</RootNamespace>
 
@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cake.Core" Version="0.20.0">
+    <PackageReference Include="Cake.Core" Version="0.23.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
