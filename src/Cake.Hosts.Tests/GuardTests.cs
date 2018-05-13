@@ -15,7 +15,7 @@ namespace Cake.Hosts.Tests
             Action act = () => Guard.CheckIpAddress("127.0.0.1", "ip");
 
             // Assert
-            act.ShouldNotThrow();
+            act.Should().NotThrow();
         }
 
 
@@ -26,7 +26,7 @@ namespace Cake.Hosts.Tests
             Action act = () => Guard.CheckIpAddress("blah.blah.blah.blah", "blah");
 
             // Assert
-            act.ShouldThrow<ArgumentException>();
+            act.Should().Throw<ArgumentException>();
         }
     }
 }
