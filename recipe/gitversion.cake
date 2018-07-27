@@ -1,4 +1,4 @@
-#tool nuget:?package=GitVersion.CommandLine&version=3.6.2
+#tool nuget:?package=GitVersion.CommandLine&version=3.6.5
 
 public class BuildVersion
 {
