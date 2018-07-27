@@ -3,6 +3,10 @@
 .vscode
 tools/
 
+#Cakebuild
+tools/*
+!tools/packages.config
+
 # User-specific files
 *.suo
 *.user
