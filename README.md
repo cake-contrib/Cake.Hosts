@@ -4,7 +4,9 @@ Cake.Hosts addon for Cake Build: manipulation of hosts file from Cake. This addo
 * Check if a record already exists in your hosts file
 * Add a new record to your hosts file
 * Remove a record from hosts file
- 
+
+[Release Notes](https://github.com/AMVSoftware/Cake.Hosts/wiki)
+
 This addon is aimed on automation and helping setting up of local development environment rather than for anything else. I can not see a need to change hosts file on any server in a production environment/build. However, please let me know if you do use it in production - I'm interested to hear your story.
 
 You can add this addon added to your cake script via nuget:
