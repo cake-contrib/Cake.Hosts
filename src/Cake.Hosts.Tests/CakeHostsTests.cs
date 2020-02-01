@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Cake.Core;
+﻿using Cake.Core;
 using Cake.Core.Diagnostics;
 using FluentAssertions;
 using NSubstitute;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Xunit;
 
 
@@ -54,6 +54,32 @@ namespace Cake.Hosts.Tests
 
             // Assert
             result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetAllRecords_Find_Records()
+        {
+            // Act
+            var result = sut.GetAllRecords();
+
+            // Assert
+            result.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void GetAllRecords_Not_Find_Records()
+        {
+            var context = Substitute.For<ICakeContext>();
+            var log = Substitute.For<ICakeLog>();
+            var sut = new CakeHosts(context, new TestsInvalidHostPathProvider(), log);
+            var hostsPath = new TestsInvalidHostPathProvider().GetHostsFilePath();
+            File.Copy(hostsPath, hostsPath + ".backup", overwrite: true);
+
+            // Act
+            var result = sut.GetAllRecords();
+
+            // Assert
+            result.Should().BeEmpty();
         }
 
         [Fact]

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Cake.Core;
+using Cake.Core.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Cake.Core;
-using Cake.Core.Diagnostics;
 
 
 namespace Cake.Hosts
@@ -41,6 +41,21 @@ namespace Cake.Hosts
             return result;
         }
 
+        internal IEnumerable<HostsFile> GetAllRecords()
+        {
+            var path = hostsPathProvider.GetHostsFilePath();
+            log.Debug("Using Hosts file at location {0}", path);
+
+            var lines = File.ReadAllLines(path);
+
+            var result = lines
+                .Where(l => HostsFileUtil.IsLineAHostFile(l))
+                .Select(l => HostsFileUtil.GetHostsFile(l));
+
+            return result;
+        }
+
+        
 
         // Does not throw if this domain name already in the file
         internal void AddHostsRecord(String ipAddress, String domainName)

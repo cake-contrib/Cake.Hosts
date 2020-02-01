@@ -1,7 +1,9 @@
-﻿using System;
-using Cake.Core;
+﻿using Cake.Core;
 using Cake.Core.Annotations;
 using Cake.Core.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Cake.Hosts
 {
@@ -34,6 +36,33 @@ namespace Cake.Hosts
             var cakeHosts = GetCakeHosts(context);
             var result = cakeHosts.HostsRecordExists(ipAddress, domainName);
             context.Log.Write(Verbosity.Normal, LogLevel.Information, "HOSTS record {0} with IP {1} exists: {2}", ipAddress, domainName, result);
+            return result;
+        }
+
+        /// <summary>
+        /// Lista all records in hosts file
+        /// </summary>
+        /// <param name="context">The Cake context.</param>
+        /// <returns>If contains records, return all records</returns>
+        [CakeMethodAlias]
+        public static IEnumerable<HostsFile> GetAllRecords(this ICakeContext context)
+        {
+            var cakeHosts = GetCakeHosts(context);
+            var result = cakeHosts.GetAllRecords();
+
+            if (result.Any())
+            {
+                context.Log.Write(Verbosity.Normal, LogLevel.Information, "List all records in hosts file");
+                foreach (var item in result)
+                {
+                    context.Log.Write(Verbosity.Normal, LogLevel.Information, $"IP {item.Ip} with Hostname {item.Hostname}");
+                }
+            }
+            else
+            {
+                context.Log.Write(Verbosity.Normal, LogLevel.Information, "Hosts file does not contains records");
+            }
+            
             return result;
         }
 
