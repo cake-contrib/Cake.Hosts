@@ -22,7 +22,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://raw.githubusercontent.com/AMVSoftware/Cake.Hosts/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
-    <PackageTags>cake hosts cake-build cake-contrib</PackageTags>
+    <PackageTags>cake hosts cake-build cake-contrib cake-addin</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <ApplicationIcon />
